@@ -1,0 +1,23 @@
+function [CVAL, TS] = CCF(arr1, arr2, tit)
+    freq = 960;
+    seg_length = 8192;
+    CVAL = -1000;
+    TS = 0;
+    for k = 1:13
+        a = (k-1)*(seg_length)+ 4801;
+        b = (seg_length+4800) + (k-1)*(seg_length);
+        ccf = xcorr(arr1(a:b) - mean(arr1(a:b)), arr2(a:b) - mean(arr2(a:b)),'coeff');
+        ccf_seg(k,:) = ccf;
+        if (CVAL < ccf)
+            CVAL = ccf;
+            TS = 0;
+        end
+    end
+    avg_ccf = mean(ccf_seg);
+    size(avg_ccf)
+    time = (-(seg_length-1):1:(seg_length-1))/freq;
+    hold on
+    title(tit)
+    plot(time,avg_ccf);
+    
+end
